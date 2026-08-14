@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SlideForge — 把想法锻造为专业演示文稿</title>
+  <meta name="description" content="SlideForge：AI 驱动的原生 PowerPoint 生成器。输入主题，一步得到带原生形状、动画、图表与演讲备注的 .pptx。" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <header class="nav reveal">
+    <a class="brand" href="#top">
+      <img src="/assets/favicon.svg" alt="SlideForge logo" width="30" height="30" />
+      <span>SlideForge</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#workspace">工作台</a>
+      <a href="#features">特性</a>
+      <a href="#faq">FAQ</a>
+      <a class="gh" href="https://github.com/gitstq/slideforge" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="top">
+    <div class="hero-bg" role="img" aria-label="锻造工坊背景"></div>
+    <div class="hero-inner">
+      <p class="eyebrow reveal">AI · 原生 PowerPoint · 开源</p>
+      <h1 class="reveal">把想法<br /><em>锻造</em>为专业演示文稿</h1>
+      <p class="lede reveal">输入一个主题，SlideForge 调用你选择的任意大模型，生成结构化大纲并渲染为带原生形状、入场动画、数据图表与演讲备注的 <strong>.pptx</strong> 文件。一键下载，开箱即用。</p>
+      <div class="hero-cta reveal">
+        <a class="btn primary" href="#workspace">开始锻造</a>
+        <button class="btn ghost" id="demoBtn">离线体验 Demo</button>
+      </div>
+      <p class="hero-note reveal">支持 OpenAI / DeepSeek / Moonshot / Ollama / 智谱 GLM · 也可完全离线运行</p>
+    </div>
+  </section>
+
+  <!-- 工作台 -->
+  <section class="workspace" id="workspace">
+    <div class="section-head reveal">
+      <p class="kicker">WORKSPACE</p>
+      <h2>锻造工作台</h2>
+      <p class="sub">左侧设定，右侧实时预览。生成即所见。</p>
+    </div>
+
+    <div class="forge">
+      <!-- 表单 -->
+      <form class="panel form" id="form">
+        <label class="field">
+          <span>演示主题 <i>*</i></span>
+          <textarea id="topic" rows="3" placeholder="例如：AI 时代的产品设计、2026 年度技术趋势、如何做一次好的融资路演…" required>AI 时代的产品设计</textarea>
+        </label>
+
+        <div class="grid-2">
+          <label class="field">
+            <span>模型商</span>
+            <select id="provider"></select>
+          </label>
+          <label class="field">
+            <span>期望页数</span>
+            <div class="range-wrap">
+              <input type="range" id="slides" min="5" max="20" value="10" />
+              <output id="slidesOut">10 页</output>
+            </div>
+          </label>
+        </div>
+
+        <label class="field">
+          <span>API Key（留空则尝试无鉴权调用）</span>
+          <input type="password" id="apiKey" placeholder="sk-…（仅保存在当前浏览器会话）" autocomplete="off" />
+        </label>
+
+        <details class="field advanced">
+          <summary>高级设置</summary>
+          <div class="grid-2">
+            <label class="field">
+              <span>Base URL（可选）</span>
+              <input type="text" id="baseUrl" placeholder="自定义 OpenAI 兼容端点" />
+            </label>
+            <label class="field">
+              <span>模型（可选）</span>
+              <input type="text" id="model" placeholder="覆盖模型商默认" />
+            </label>
+          </div>
+          <div class="grid-2">
+            <label class="field">
+              <span>入场动画</span>
+              <select id="effect">
+                <option value="fade">淡入</option>
+                <option value="rise">上升</option>
+                <option value="zoom">缩放</option>
+                <option value="none">无</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>切换动画</span>
+              <select id="transition">
+                <option value="fade">淡出淡入</option>
+                <option value="push">推进</option>
+                <option value="split">分割</option>
+                <option value="wipe">擦除</option>
+                <option value="random">随机</option>
+                <option value="none">无</option>
+              </select>
+            </label>
+          </div>
+        </details>
+
+        <div class="field">
+          <span>主题色板</span>
+          <div class="swatches" id="swatches"></div>
+        </div>
+
+        <button type="submit" class="btn primary block" id="generateBtn">
+          <span class="btn-label">锻造生成 .pptx</span>
+          <span class="spark" aria-hidden="true"></span>
+        </button>
+        <p class="form-tip">提示：没有 API Key？点击顶部「离线体验 Demo」或直接渲染示例大纲。</p>
+      </form>
+
+      <!-- 预览 -->
+      <div class="panel preview" id="previewPanel">
+        <div class="preview-stage" id="stage">
+          <div class="empty" id="emptyState">
+            <img src="/assets/favicon.svg" alt="" width="56" height="56" />
+            <p>设定主题后点击「锻造生成」，<br />这里会出现实时幻灯片预览。</p>
+          </div>
+          <div class="slide-frame hidden" id="slideFrame"></div>
+          <div class="forge-loading hidden" id="loading">
+            <div class="ingot"><i></i><i></i><i></i><i></i></div>
+            <p>锻造中 · 大纲 → 形状 → 动画…</p>
+          </div>
+        </div>
+        <div class="preview-bar">
+          <button class="mini" id="prevBtn" aria-label="上一页">←</button>
+          <span id="pageInfo">—</span>
+          <button class="mini" id="nextBtn" aria-label="下一页">→</button>
+          <span class="spacer"></span>
+          <a class="btn primary sm" id="downloadBtn" download>下载 .pptx</a>
+        </div>
+        <div class="thumbs" id="thumbs"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 特性 -->
+  <section class="features" id="features">
+    <div class="section-head reveal">
+      <p class="kicker">CRAFT</p>
+      <h2>为「真实使用」而锻造</h2>
+      <p class="sub">不是图片拼贴，而是可编辑、可继续创作的原生文件。</p>
+    </div>
+    <div class="feature-grid">
+      <article class="feat reveal">
+        <span class="feat-num">01</span>
+        <h3>原生形状与动画</h3>
+        <p>圆角矩形、强调条、指标卡、章节徽章——全部是 PowerPoint 原生矢量对象，附带淡入 / 上升 / 缩放入场与页面切换动画。</p>
+      </article>
+      <article class="feat reveal">
+        <span class="feat-num">02</span>
+        <h3>原生数据图表</h3>
+        <p>柱状 / 折线 / 饼图 / 环形图直接以可编辑图表写入文件，配色自动贴合主题，数据随时可改。</p>
+      </article>
+      <article class="feat reveal">
+        <span class="feat-num">03</span>
+        <h3>演讲备注内置</h3>
+        <p>每页可带演讲者备注（Notes），在演示模式下直接进入提词器，演讲与制作一体化。</p>
+      </article>
+      <article class="feat reveal">
+        <span class="feat-num">04</span>
+        <h3>任意模型 · 本地可跑</h3>
+        <p>OpenAI 兼容协议，OpenAI / DeepSeek / Moonshot / Ollama / 智谱随意切换；无 Key 也能离线生成示例。</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="section-head reveal">
+      <p class="kicker">FAQ</p>
+      <h2>常见问题</h2>
+    </div>
+    <div class="qa reveal">
+      <details>
+        <summary>API Key 会泄露吗？</summary>
+        <p>不会。Key 仅保存在当前浏览器会话内存中，请求直接由你的浏览器发往模型商，不经第三方服务器中转。</p>
+      </details>
+      <details>
+        <summary>生成的文件能再编辑吗？</summary>
+        <p>能。输出是标准的 .pptx 文件，所有形状、图表、备注、动画均为原生对象，可在 PowerPoint / Keynote / WPS 中继续编辑。</p>
+      </details>
+      <details>
+        <summary>没有模型 API Key 能用吗？</summary>
+        <p>可以。使用「离线体验 Demo」即可用内置示例大纲完整生成一份演示文稿；也可以准备一份大纲 JSON 直接渲染。</p>
+      </details>
+      <details>
+        <summary>如何在自己的服务器上部署？</summary>
+        <p>安装依赖后执行 <code>uvicorn slideforge.api:app --host 0.0.0.0 --port 8000</code> 即可，或使用仓库内的 Dockerfile。</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="cta">
+    <div class="cta-inner reveal">
+      <h2>下一份演示文稿，<br />从一句话开始。</h2>
+      <div class="cta-actions">
+        <a class="btn primary" href="#workspace">开始锻造</a>
+        <a class="btn ghost" href="https://github.com/gitstq/slideforge" target="_blank" rel="noopener">在 GitHub 上 ⭐ Star</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div>
+      <a class="brand" href="#top"><img src="/assets/favicon.svg" alt="" width="22" height="22" /><span>SlideForge</span></a>
+      <span class="ver" id="ver">v1.0.0</span>
+    </div>
+    <p>MIT License · 生成自 SlideForge</p>
+  </footer>
+
+  <script src="/assets/app.js"></script>
+</body>
+</html>

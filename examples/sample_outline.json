@@ -1,0 +1,69 @@
+{
+  "title": "AI 时代的产品设计",
+  "subtitle": "从洞察到交付的完整方法论",
+  "author": "SlideForge",
+  "theme": "ocean",
+  "slides": [
+    {
+      "type": "title",
+      "title": "AI 时代的产品设计",
+      "subtitle": "从洞察到交付的完整方法论"
+    },
+    {
+      "type": "section",
+      "title": "01 · 为什么是现在",
+      "bullets": ["技术拐点", "用户预期变化"]
+    },
+    {
+      "type": "bullets",
+      "title": "核心洞察",
+      "bullets": [
+        "AI 让「做出」不再是瓶颈，「想清楚」才是。",
+        "产品价值 = 决策质量 × 执行速度。",
+        "可解释、可回滚、可度量成为新的设计底线。"
+      ],
+      "notes": "强调三个洞察的内在联系。",
+      "accent": "#38BDF8"
+    },
+    {
+      "type": "two_column",
+      "title": "机会矩阵",
+      "columns": [
+        { "heading": "进攻区", "bullets": ["垂直场景深耕", "数据飞轮", "生态卡位"] },
+        { "heading": "防守区", "bullets": ["信任与合规", "成本结构", "渠道壁垒"] }
+      ]
+    },
+    {
+      "type": "stats",
+      "title": "数据说话",
+      "stats": [
+        { "value": "3×", "label": "交付速度提升" },
+        { "value": "68%", "label": "用户留存改善" },
+        { "value": "40%", "label": "人力成本下降" }
+      ]
+    },
+    {
+      "type": "chart",
+      "title": "市场增长趋势",
+      "chart": {
+        "type": "bar",
+        "labels": ["Q1", "Q2", "Q3", "Q4"],
+        "datasets": [
+          { "name": "规模", "values": [12, 19, 28, 44] },
+          { "name": "增速", "values": [8, 14, 20, 32] }
+        ]
+      }
+    },
+    {
+      "type": "quote",
+      "title": "一个判断",
+      "quote": "真正的壁垒不是模型，而是对场景的理解与持续交付的能力。",
+      "quote_source": "SlideForge 观点"
+    },
+    {
+      "type": "closing",
+      "title": "谢谢",
+      "subtitle": "期待与你一起锻造下一个作品"
+    }
+  ]
+}

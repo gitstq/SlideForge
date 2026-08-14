@@ -1,0 +1,14 @@
+# SlideForge 依赖
+# 核心生成器仅依赖 python-pptx；Web 服务需 fastapi/uvicorn/httpx
+python-pptx>=1.0.0
+httpx>=0.27.0
+
+# Web 服务
+fastapi>=0.110.0
+uvicorn>=0.29.0
+
+# 可选：直接解析 .docx 输入（如需要文档导入）
+python-docx>=1.1.0
+
+# 开发 / 测试
+pytest>=8.0.0
